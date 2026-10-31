@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root {
+      --fg: #111827;
+      --muted: #596579;
+      --line: #d8dee9;
+      --soft: #f7f9fc;
+      --head: #e5e7eb;
+      --blue: #2457d6;
+      --blue-soft: #eef3ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--fg);
+      background: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .page { min-width: 0; padding: 24px 28px 42px; }
+    h1 { margin: 0 0 8px; font-size: 26px; line-height: 1.25; letter-spacing: 0; }
+    .meta { margin-bottom: 18px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .canvas { border: 1px solid var(--line); overflow: auto; background: #fff; }
+    .matrix {
+      width: max-content;
+      display: grid;
+      grid-template-columns: 220px repeat(3, minmax(420px, 460px));
+    }
+    .mcell {
+      min-height: 320px;
+      padding: 16px 18px 20px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .mcell:nth-child(4n) { border-right: 0; }
+    .mhead {
+      min-height: 88px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: center;
+      background: var(--head);
+      font-size: 17px;
+      font-weight: 850;
+      line-height: 1.2;
+      white-space: normal;
+    }
+    .product-head {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+    .product-name { color: var(--fg); font-size: 17px; font-weight: 850; }
+    .axis-head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-intro,
+    .product-reason {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 500;
+      text-align: left;
+    }
+    .product-intro strong,
+    .product-reason strong { color: #2f3b52; font-weight: 800; }
+    .row-head { background: var(--soft); }
+    .row-head h2 { margin: 0 0 10px; font-size: 18px; line-height: 1.35; letter-spacing: 0; }
+    .row-head p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .blank { background: #fbfcff; }
+    p { margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    ul { margin: 8px 0 0; padding-left: 18px; }
+    li { margin: 6px 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+    .shots.single { grid-template-columns: minmax(0, 1fr); }
+    .shot img {
+      display: block;
+      width: 100%;
+      max-height: 280px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 1px 5px rgba(15, 23, 42, .08);
+    }
+    .shot.tall img { width: auto; max-width: 100%; max-height: 380px; margin: 0 auto; }
+    .evidence-title { margin: 6px 0 0; color: #2f3b52; font-size: 12px; line-height: 1.35; font-weight: 800; }
+    .source { margin-top: 7px; color: #7a8495; font-size: 12px; line-height: 1.4; }
+    .summary-block {
+      margin-top: 14px;
+      padding: 13px 14px;
+      border: 1px solid #cfe0ff;
+      border-radius: 8px;
+      background: var(--blue-soft);
+    }
+    .summary-block strong { display: block; margin-bottom: 6px; color: #0f2f76; font-size: 14px; }
+    .insights {
+      margin-top: 24px;
+      padding-top: 0;
+      border-top: 0;
+    }
+    .insights h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      line-height: 1.3;
+      letter-spacing: 0;
+    }
+    .insight-table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .insight-table {
+      width: 100%;
+      min-width: 960px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .insight-table th,
+    .insight-table td {
+      padding: 14px 16px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      text-align: left;
+    }
+    .insight-table th {
+      color: #2f3b52;
+      background: var(--soft);
+      font-weight: 850;
+    }
+    .insight-table th:last-child,
+    .insight-table td:last-child { border-right: 0; }
+    .insight-table tr:last-child td { border-bottom: 0; }
+    .insight-table .insight-title {
+      color: var(--fg);
+      font-weight: 850;
+    }
+    .link-cell {
+      min-height: 0;
+      background: var(--soft);
+    }
+    .reference-head {
+      min-height: 0;
+      background: var(--soft);
+    }
+    .link-cell h3 { margin: 0 0 8px; font-size: 15px; line-height: 1.35; }
+    .link-cell ul { margin-top: 4px; }
+    a { color: var(--blue); text-decoration: none; }
+    @media (max-width: 900px) {
+      .page { padding: 18px 14px 32px; }
+      .matrix { grid-template-columns: 190px repeat(3, minmax(340px, 380px)); }
+      .mcell { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>{{H1}}</h1>
+      <div class="meta">
+        {{META_LINE_1}}<br>
+        {{META_LINE_2}}
+      </div>
+    </header>
+
+    <section class="canvas">
+      <div class="matrix">
+        <div class="mcell mhead axis-head">调研点 / 产品</div>
+        <div class="mcell mhead product-head">
+          <div class="product-name">{{PRODUCT_1}}</div>
+          <p class="product-intro"><strong>产品介绍：</strong>{{PRODUCT_INTRO_1}}</p>
+          <p class="product-reason"><strong>推荐理由：</strong>{{PRODUCT_REASON_1}}</p>
+        </div>
+        <div class="mcell mhead product-head">
+          <div class="product-name">{{PRODUCT_2}}</div>
+          <p class="product-intro"><strong>产品介绍：</strong>{{PRODUCT_INTRO_2}}</p>
+          <p class="product-reason"><strong>推荐理由：</strong>{{PRODUCT_REASON_2}}</p>
+        </div>
+        <div class="mcell mhead product-head">
+          <div class="product-name">{{PRODUCT_3}}</div>
+          <p class="product-intro"><strong>产品介绍：</strong>{{PRODUCT_INTRO_3}}</p>
+          <p class="product-reason"><strong>推荐理由：</strong>{{PRODUCT_REASON_3}}</p>
+        </div>
+
+        <div class="mcell row-head">
+          <h2>{{RESEARCH_POINT_1}}</h2>
+          <p>{{RESEARCH_POINT_DESC_1}}</p>
+        </div>
+        <div class="mcell">
+          <div class="shots single">
+            <div class="shot">
+              <a href="assets/{{IMAGE_1_1}}" target="_blank"><img src="assets/{{IMAGE_1_1}}" alt="{{IMAGE_ALT_1_1}}"></a>
+              <div class="evidence-title">{{IMAGE_TITLE_1_1}}</div>
+              <div class="source">来源：<a href="{{SOURCE_URL_1_1}}">{{SOURCE_TITLE_1_1}}</a></div>
+            </div>
+          </div>
+          <div class="summary-block">
+            <strong>总结</strong>
+            <ul>
+              <li>{{SUMMARY_1_1_A}}</li>
+              <li>{{SUMMARY_1_1_B}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mcell blank"></div>
+        <div class="mcell">
+          <div class="shots single">
+            <div class="shot">
+              <a href="assets/{{IMAGE_1_3}}" target="_blank"><img src="assets/{{IMAGE_1_3}}" alt="{{IMAGE_ALT_1_3}}"></a>
+              <div class="evidence-title">{{IMAGE_TITLE_1_3}}</div>
+              <div class="source">来源：<a href="{{SOURCE_URL_1_3}}">{{SOURCE_TITLE_1_3}}</a></div>
+            </div>
+          </div>
+          <div class="summary-block">
+            <strong>总结</strong>
+            <ul>
+              <li>{{SUMMARY_1_3_A}}</li>
+              <li>{{SUMMARY_1_3_B}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mcell row-head reference-head">
+          <h2>Reference Links</h2>
+          <p>汇总本次 Canvas 使用的产品级来源和格子级证据来源；数量应多于 Source Pack，并体现按产品和调研点追加的细证据。</p>
+        </div>
+        <div class="mcell link-cell">
+          <h3>{{PRODUCT_1}}</h3>
+          <ul>
+            <li><a href="{{PRODUCT_1_SOURCE_URL_1}}">{{PRODUCT_1_SOURCE_TITLE_1}}</a></li>
+            <li><a href="{{PRODUCT_1_SOURCE_URL_2}}">{{PRODUCT_1_SOURCE_TITLE_2}}</a></li>
+            <li><a href="{{PRODUCT_1_SOURCE_URL_3}}">{{PRODUCT_1_SOURCE_TITLE_3}}</a></li>
+          </ul>
+        </div>
+        <div class="mcell link-cell">
+          <h3>{{PRODUCT_2}}</h3>
+          <ul>
+            <li><a href="{{PRODUCT_2_SOURCE_URL_1}}">{{PRODUCT_2_SOURCE_TITLE_1}}</a></li>
+            <li><a href="{{PRODUCT_2_SOURCE_URL_2}}">{{PRODUCT_2_SOURCE_TITLE_2}}</a></li>
+            <li><a href="{{PRODUCT_2_SOURCE_URL_3}}">{{PRODUCT_2_SOURCE_TITLE_3}}</a></li>
+          </ul>
+        </div>
+        <div class="mcell link-cell">
+          <h3>{{PRODUCT_3}}</h3>
+          <ul>
+            <li><a href="{{PRODUCT_3_SOURCE_URL_1}}">{{PRODUCT_3_SOURCE_TITLE_1}}</a></li>
+            <li><a href="{{PRODUCT_3_SOURCE_URL_2}}">{{PRODUCT_3_SOURCE_TITLE_2}}</a></li>
+            <li><a href="{{PRODUCT_3_SOURCE_URL_3}}">{{PRODUCT_3_SOURCE_TITLE_3}}</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="insights">
+      <h2>设计 Insight</h2>
+      <!--
+        Insight 写法：
+        - 必须使用表格，每行 1 条 Insight。
+        - Insight：一句可执行设计判断，不写泛泛分类名。
+        - 看到：点名 Canvas 中出现过的产品和具体机制。
+        - 说明：解释背后的设计判断、适用条件或风险。
+        - 对你的启示：转成本需求可用的具体设计决策。
+      -->
+      <div class="insight-table-wrap">
+        <table class="insight-table">
+          <thead>
+            <tr>
+              <th style="width: 24%;">Insight</th>
+              <th style="width: 26%;">看到</th>
+              <th style="width: 25%;">说明</th>
+              <th style="width: 25%;">对你的启示</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="insight-title">Insight 1｜{{INSIGHT_TITLE_1}}</td>
+              <td>{{INSIGHT_SEEN_1}}</td>
+              <td>{{INSIGHT_MEANING_1}}</td>
+              <td>{{INSIGHT_TAKEAWAY_1}}</td>
+            </tr>
+            <tr>
+              <td class="insight-title">Insight 2｜{{INSIGHT_TITLE_2}}</td>
+              <td>{{INSIGHT_SEEN_2}}</td>
+              <td>{{INSIGHT_MEANING_2}}</td>
+              <td>{{INSIGHT_TAKEAWAY_2}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

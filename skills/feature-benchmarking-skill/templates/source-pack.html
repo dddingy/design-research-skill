@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #fff;
+      --text: #17202e;
+      --muted: #5f6978;
+      --line: #d9dee8;
+      --soft: #eef3ff;
+      --accent: #2659d9;
+      --good: #0f8f63;
+      --warn: #b46a00;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    main { max-width: 1280px; margin: 0 auto; padding: 32px 24px 56px; }
+    header { margin-bottom: 22px; }
+    h1 { margin: 0 0 8px; font-size: 30px; line-height: 1.2; letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 22px; letter-spacing: 0; }
+    h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: 0; }
+    p { margin: 0 0 12px; color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .meta { color: var(--muted); }
+    .box, .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    main > section + section { margin-top: 16px; }
+    .box { padding: 18px; }
+    .scope { margin: 0; }
+    .scope dl { margin: 0; display: grid; gap: 10px; }
+    .scope-row { display: grid; grid-template-columns: 120px 1fr; gap: 14px; }
+    .scope dt { color: var(--text); font-weight: 700; }
+    .scope dd { margin: 0; color: var(--muted); }
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0 0;
+    }
+    .box ul { margin: 8px 0 0; padding-left: 20px; }
+    .priority, .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .priority-list { margin: 14px 0 0; padding-left: 20px; color: var(--muted); }
+    .priority-list li { margin: 8px 0; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #c8d6ff;
+      background: var(--soft);
+      color: #1f3f9c;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .card { overflow: hidden; }
+    .card-body { padding: 16px 20px 8px; }
+    .card-body > p { margin-bottom: 8px; }
+    .card > .card-body:not(.source-body) {
+      padding: 14px 20px 10px;
+    }
+    .card > .card-body:not(.source-body) > p:not(.type-intro) {
+      margin-bottom: 4px;
+    }
+    .source-body {
+      border-top: 1px solid var(--line);
+      background: #fbfcff;
+      padding: 10px 18px 12px;
+    }
+    .note {
+      margin: -8px 20px 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding: 0 20px 16px;
+      background: var(--panel);
+    }
+    .gallery.single {
+      grid-template-columns: minmax(0, 420px);
+      justify-content: start;
+    }
+    .gallery.two,
+    .gallery:has(> figure:nth-child(2):last-child) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      justify-content: start;
+    }
+    figure {
+      margin: 0;
+      min-width: 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      object-fit: cover;
+      object-position: left top;
+      background: #fff;
+    }
+    img.product-shot {
+      object-fit: cover;
+      object-position: center top;
+      background: #fff;
+    }
+    img.fill-shot {
+      object-fit: cover;
+      object-position: center top;
+      background: #fff;
+    }
+    img.fill-shot.bottom { object-position: center bottom; }
+    img.contain-shot {
+      object-fit: contain;
+      object-position: center center;
+      background: #f8fafc;
+    }
+    .gallery.detail-gallery img {
+      object-fit: contain;
+      object-position: center center;
+      background: #f8fafc;
+    }
+    figcaption {
+      min-height: 38px;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid #eef1f6;
+      background: #fbfcff;
+    }
+    .type-intro {
+      margin: 12px 0 -2px;
+      color: var(--muted);
+      font-size: inherit;
+      line-height: inherit;
+    }
+    .type-intro::before {
+      content: "产品介绍：";
+      color: var(--text);
+      font-weight: 700;
+    }
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .card-title-row h3 { margin-bottom: 0; }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-top: 1px;
+    }
+    .tag {
+      display: inline-block;
+      margin: 2px 0;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #f0f2f6;
+      color: #394253;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .recommend { color: var(--good); font-weight: 700; }
+    .tradeoff { color: var(--warn); font-weight: 700; }
+    .sources {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .sources li { margin: 3px 0; }
+    .stageb-table {
+      margin: 16px 0 0;
+      overflow: hidden;
+    }
+    .stageb-table .next-step {
+      margin: 0 0 14px;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .stageb-recommendations {
+      width: 100%;
+      margin: 16px 0;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 13px;
+    }
+    .stageb-recommendations th,
+    .stageb-recommendations td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    .stageb-recommendations th {
+      background: #f4f6fb;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .stageb-recommendations tr:last-child td { border-bottom: 0; }
+    .stageb-recommendations td:first-child {
+      width: 24%;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .stageb-recommendations td:nth-child(2) { width: 42%; color: var(--muted); }
+    .stageb-recommendations td:nth-child(3) { color: var(--muted); }
+    .copy-panel {
+      margin: 16px 0 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+    .copy-row { display: block; }
+    .copy-output {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      background: #fff;
+      font: inherit;
+    }
+    .copy-button {
+      margin-top: 12px;
+      border: 1px solid #c8d6ff;
+      border-radius: 10px;
+      padding: 9px 12px;
+      background: #fff;
+      color: #1f3f9c;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .copy-status {
+      margin-left: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    @media (max-width: 900px) {
+      main { padding: 22px 14px 40px; }
+      .summary { grid-template-columns: 1fr; }
+      .scope-row { grid-template-columns: 1fr; gap: 4px; }
+      .card-body, .source-body { padding: 16px; }
+      .card > .card-body:not(.source-body) { padding: 16px; }
+      .card > .card-body:not(.source-body) .type-intro {
+        margin: 4px 0 8px;
+      }
+      .note { margin: -8px 16px 14px; }
+      .gallery { grid-template-columns: 1fr; padding: 0 16px 18px; gap: 14px; }
+      .gallery.single,
+      .gallery.two,
+      .gallery:has(> figure:nth-child(2):last-child) { grid-template-columns: 1fr; }
+      img { height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>{{H1}}</h1>
+      <p class="meta">{{DATE}} · {{SUBTITLE}}</p>
+    </header>
+
+    <!-- Keep scope fields concise: each value should be one short phrase, not a paragraph. -->
+    <section class="box scope">
+      <h2>调研范围</h2>
+      <dl>
+        <div class="scope-row">
+          <dt>问题</dt>
+          <dd>{{PROBLEM}}</dd>
+        </div>
+        <div class="scope-row">
+          <dt>目标</dt>
+          <dd>{{GOAL}}</dd>
+        </div>
+        <div class="scope-row">
+          <dt>参考类型</dt>
+          <dd>{{REFERENCE_TYPES}}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Keep summary brief: one concise sentence plus three to five short bullets. -->
+    <section class="summary">
+      <div class="box">
+        <h2>关键结论</h2>
+        <p>{{KEY_SUMMARY}}</p>
+        <ul>
+          <li>{{KEY_POINT_1}}</li>
+          <li>{{KEY_POINT_2}}</li>
+          <li>{{KEY_POINT_3}}</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h2>建议优先深拆</h2>
+        <div class="priority">
+          <span class="pill">{{PRIORITY_PRODUCT_1}}</span>
+          <span class="pill">{{PRIORITY_PRODUCT_2}}</span>
+          <span class="pill">{{PRIORITY_PRODUCT_3}}</span>
+        </div>
+        <ul class="priority-list">
+          <li><strong>{{PRIORITY_PRODUCT_1}}</strong>：{{PRIORITY_REASON_1}}</li>
+          <li><strong>{{PRIORITY_PRODUCT_2}}</strong>：{{PRIORITY_REASON_2}}</li>
+          <li><strong>{{PRIORITY_PRODUCT_3}}</strong>：{{PRIORITY_REASON_3}}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <h2>候选导航</h2>
+      <div class="nav">
+        <a class="pill" href="#{{PRODUCT_ID}}">{{PRODUCT_NAME}}</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card" id="{{PRODUCT_ID}}">
+        <div class="card-body">
+          <div class="card-title-row">
+            <h3>{{INDEX}}. {{PRODUCT_NAME}}</h3>
+            <div class="tag-row">
+              <span class="tag">{{TAG_1}}</span><span class="tag">{{TAG_2}}</span><span class="tag">{{TAG_3}}</span>
+            </div>
+          </div>
+          <p class="type-intro">{{PRODUCT_NAME}} 是{{PRODUCT_POSITIONING}}，主要服务{{USER_SCENARIO_OR_WORKFLOW}}。</p>
+          <p><span class="recommend">推荐理由：</span>{{RECOMMEND_REASON}}</p>
+        </div>
+        <div class="gallery">
+          <figure><img class="product-shot" src="assets/{{IMAGE_1}}" alt="{{IMAGE_ALT_1}}"><figcaption>{{IMAGE_DESC_1}}</figcaption></figure>
+          <figure><img class="product-shot" src="assets/{{IMAGE_2}}" alt="{{IMAGE_ALT_2}}"><figcaption>{{IMAGE_DESC_2}}</figcaption></figure>
+          <figure><img class="product-shot" src="assets/{{IMAGE_3}}" alt="{{IMAGE_ALT_3}}"><figcaption>{{IMAGE_DESC_3}}</figcaption></figure>
+        </div>
+        <p class="note"><span class="tradeoff">注意：</span>{{TRADEOFF}}</p>
+        <div class="card-body source-body">
+          <ul class="sources">
+            <li>{{SOURCE_TYPE_1}}：<a href="{{SOURCE_URL_1}}">{{SOURCE_TITLE_1}}</a></li>
+            <li>{{SOURCE_TYPE_2}}：<a href="{{SOURCE_URL_2}}">{{SOURCE_TITLE_2}}</a></li>
+            <li>{{SOURCE_TYPE_3}}：<a href="{{SOURCE_URL_3}}">{{SOURCE_TITLE_3}}</a></li>
+            <!-- Product cards should include 3-5 useful sources, with at least one official and one non-official source.
+            <li>{{SOURCE_TYPE_4}}：<a href="{{SOURCE_URL_4}}">{{SOURCE_TITLE_4}}</a></li>
+            <li>{{SOURCE_TYPE_5}}：<a href="{{SOURCE_URL_5}}">{{SOURCE_TITLE_5}}</a></li>
+            -->
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="box stageb-table">
+      <h2>Canvas 深拆推荐</h2>
+      <p class="next-step">用于决定下一步优先深拆哪些产品，并说明这些产品会覆盖哪些功能点。</p>
+      <table class="stageb-recommendations">
+        <thead>
+          <tr>
+            <th>功能点</th>
+            <th>下一步看什么</th>
+            <th>重点参考产品</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{CANVAS_RESEARCH_POINT_1}}</td>
+            <td>{{CANVAS_RESEARCH_LOOKFOR_1}}</td>
+            <td>{{CANVAS_RESEARCH_PRODUCTS_1}}</td>
+          </tr>
+          <tr>
+            <td>{{CANVAS_RESEARCH_POINT_2}}</td>
+            <td>{{CANVAS_RESEARCH_LOOKFOR_2}}</td>
+            <td>{{CANVAS_RESEARCH_PRODUCTS_2}}</td>
+          </tr>
+          <tr>
+            <td>{{CANVAS_RESEARCH_POINT_3}}</td>
+            <td>{{CANVAS_RESEARCH_LOOKFOR_3}}</td>
+            <td>{{CANVAS_RESEARCH_PRODUCTS_3}}</td>
+          </tr>
+          <!-- Optional rows: keep only if the Source Pack target/scope has these research points. Do not force five rows. -->
+          <tr>
+            <td>{{CANVAS_RESEARCH_POINT_4}}</td>
+            <td>{{CANVAS_RESEARCH_LOOKFOR_4}}</td>
+            <td>{{CANVAS_RESEARCH_PRODUCTS_4}}</td>
+          </tr>
+          <tr>
+            <td>{{CANVAS_RESEARCH_POINT_5}}</td>
+            <td>{{CANVAS_RESEARCH_LOOKFOR_5}}</td>
+            <td>{{CANVAS_RESEARCH_PRODUCTS_5}}</td>
+          </tr>
+          <!-- Add or remove rows as needed. Complete the actual two to five research points from the Source Pack target/scope. -->
+        </tbody>
+      </table>
+    </section>
+
+    <section class="box stageb-table">
+      <h2>下一步：生成 Canvas Benchmark</h2>
+      <p class="next-step">本页不会自动进入 Canvas；下一步需要从上方候选产品里选出 3–6 个想深拆的产品。如果你只回复“继续”或“按推荐继续”，会按下面文本里的产品选择进入下一步。下面的回复文本可直接修改后复制。</p>
+      <div class="copy-panel">
+        <div class="copy-row">
+          <textarea class="copy-output" id="canvas-reply">继续生成 Canvas Benchmark。
+产品选择：{{PRIORITY_PRODUCT_1}}、{{PRIORITY_PRODUCT_2}}、{{PRIORITY_PRODUCT_3}}
+调研点：
+- {{CANVAS_RESEARCH_POINT_1}}
+- {{CANVAS_RESEARCH_POINT_2}}
+- {{CANVAS_RESEARCH_POINT_3}}
+- {{CANVAS_RESEARCH_POINT_4}}
+- {{CANVAS_RESEARCH_POINT_5}}</textarea>
+          <!-- Remove unused research-point lines above when the Source Pack has fewer than five points. -->
+          <button class="copy-button" type="button" id="copy-canvas-reply">复制/选中</button>
+          <span class="copy-status" id="copy-canvas-status">如果浏览器拦截复制，会自动选中文本。</span>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const output = document.getElementById('canvas-reply');
+    const button = document.getElementById('copy-canvas-reply');
+    const status = document.getElementById('copy-canvas-status');
+    button.addEventListener('click', async () => {
+      const originalText = button.textContent;
+      output.select();
+      output.setSelectionRange(0, output.value.length);
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(output.value);
+        } else if (!document.execCommand('copy')) {
+          throw new Error('copy failed');
+        }
+        button.textContent = '已复制';
+        status.textContent = '已复制到剪贴板。';
+      } catch (error) {
+        button.textContent = '已选中，请按 Cmd+C';
+        status.textContent = '浏览器拦截了自动复制，文本已选中，请按 Cmd+C。';
+      }
+      setTimeout(() => { button.textContent = originalText || '复制/选中'; }, 1600);
+    });
+  </script>
+</body>
+</html>

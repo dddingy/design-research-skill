@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #fff;
+      --fg: #17202e;
+      --muted: #5f6978;
+      --subtle: #8992a3;
+      --line: #dde2ea;
+      --line-soft: #edf0f5;
+      --blue: #2457d6;
+      --blue-soft: #eef4ff;
+      --blue-line: #bdd0ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--fg);
+      font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    main {
+      max-width: 1320px;
+      height: 100vh;
+      margin: 0 auto;
+      padding: 18px 28px 22px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    header {
+      flex: 0 0 auto;
+      padding-bottom: 12px;
+    }
+    h1 { margin: 0 0 4px; font-size: 23px; line-height: 1.2; letter-spacing: 0; color: var(--fg); }
+    h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.32; letter-spacing: 0; color: var(--fg); }
+    h3 { margin: 0 0 10px; font-size: 15px; letter-spacing: 0; }
+    p { margin: 0 0 8px; color: var(--muted); }
+    a { color: var(--blue); text-decoration: none; }
+    .meta { margin: 0; color: var(--muted); }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(430px, .8fr);
+      gap: 18px;
+      align-items: start;
+      min-height: 0;
+      flex: 1;
+      overflow: hidden;
+    }
+    .reference-table, .output {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: none;
+    }
+    .reference-table {
+      max-height: 100%;
+      overflow: auto;
+    }
+    .table-head { display: grid; }
+    .table-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      grid-template-columns: 1fr auto;
+      background: #fafbfc;
+      color: #30394a;
+      font-weight: 800;
+      border-bottom: 1px solid var(--line);
+    }
+    .table-head > div { padding: 10px 18px; font-size: 13px; line-height: 1.35; }
+    .table-head > div + div {
+      display: block;
+      min-width: 136px;
+      text-align: right;
+    }
+    .reference-item {
+      display: block;
+      border-top: 1px solid var(--line-soft);
+      position: relative;
+      background: var(--panel);
+      transition: background .15s ease, box-shadow .15s ease;
+    }
+    .reference-item:first-of-type { border-top: 0; }
+    .reference-item:hover { background: #fcfdff; }
+    .reference-item:has(.write-choice:checked) {
+      background: var(--panel);
+      box-shadow: none;
+    }
+    .human-cell {
+      display: contents;
+    }
+    .human-cell h2 {
+      margin: 0;
+      padding: 16px 164px 8px 22px;
+    }
+    .human-cell > p:not(.point-note) {
+      padding: 0 22px;
+      max-width: 100%;
+    }
+      .choice-cell {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      padding: 0;
+      background: transparent;
+    }
+    .choice-cell h3,
+    .choice-cell p { display: none; }
+    .tag {
+      display: inline-flex;
+      margin: 0 6px 9px 0;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #f3f5f8;
+      color: #465164;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .human-cell .tag:first-of-type {
+      margin-left: 22px;
+    }
+    .choice-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0; }
+    .choice-row label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 124px;
+      padding: 7px 11px;
+      border: 1px solid var(--blue-line);
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: #1742a3;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
+    }
+    .choice-row label:hover {
+      border-color: #8cadff;
+      background: #e5eeff;
+    }
+    .choice-row input { accent-color: var(--blue); }
+    .reference-item:has(.write-choice:checked) .choice-row label {
+      background: #fff;
+      border-color: var(--blue-line);
+      color: #1742a3;
+    }
+    textarea {
+      width: 100%;
+      min-height: 68px;
+      padding: 10px 12px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      color: var(--fg);
+      background: #fbfcff;
+    }
+    .point-note {
+      display: block;
+      width: calc(100% - 44px);
+      max-width: none;
+      margin: 8px 22px 15px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .point-note strong,
+    .human-cell p strong { color: #2b3445; }
+    .output {
+      height: 100%;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+    }
+    .output h2 { margin-bottom: 8px; font-size: 18px; }
+    .output > p {
+      margin-bottom: 14px;
+      color: var(--muted);
+    }
+    .output textarea {
+      min-height: 0;
+      flex: 1;
+      padding: 16px;
+      border-color: #d7deea;
+      background: #fbfcff;
+      font: 14px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      main { padding: 22px 14px 40px; }
+      main { height: auto; min-height: 100vh; overflow: visible; }
+      .layout { grid-template-columns: 1fr; }
+      .table-head { display: none; }
+      .reference-item { display: block; }
+      .human-cell { display: block; padding: 16px; }
+      .human-cell h2 { padding: 0; margin-bottom: 8px; }
+      .human-cell > p:not(.point-note) { padding: 0; }
+      .human-cell .tag:first-of-type { margin-left: 0; }
+      .point-note { width: 100%; margin: 9px 0 0; }
+      .choice-cell { position: static; padding: 0 16px 16px; }
+      .reference-table, .output { max-height: none; overflow: visible; }
+      .output { height: auto; }
+      .output textarea { min-height: 320px; flex: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>{{H1}}</h1>
+      <p class="meta">{{META}}</p>
+    </header>
+
+    <div class="layout">
+      <section id="items" class="reference-table">
+        <div class="table-head">
+          <div>参考点选择</div>
+          <div>采纳操作</div>
+        </div>
+        <article class="reference-item"
+          data-title="{{ITEM_TITLE_1}}"
+          data-product="{{SOURCE_PRODUCT_1}}"
+          data-evidence="{{EVIDENCE_LOCATION_1}}"
+          data-practice="{{SPECIFIC_PRACTICE_1}}"
+          data-transfer="{{TRANSFERABLE_DESIGN_1}}"
+          data-adapt="{{ADAPTATION_1}}"
+          data-avoid="{{AVOID_1}}">
+          <div class="human-cell">
+            <h2>{{ITEM_TITLE_1}}</h2>
+            <span class="tag">{{SOURCE_PRODUCT_1}}</span>
+            <span class="tag">{{RESEARCH_POINT_1}}</span>
+            <p><strong>可参考点：</strong>{{REFERENCE_VALUE_1}}</p>
+            <p><strong>适配提醒：</strong>{{ADAPTATION_NOTE_1}}</p>
+            <p class="point-note"><strong>参考摘要：</strong>{{REFERENCE_SUMMARY_1}}</p>
+          </div>
+          <div class="choice-cell">
+            <h3>确认参考</h3>
+            <p><strong>适配提醒：</strong>{{ADAPTATION_NOTE_1}}</p>
+            <div class="choice-row">
+              <label><input type="checkbox" class="write-choice" name="choice-1" value="采纳此参考">采纳此参考</label>
+            </div>
+          </div>
+        </article>
+
+        <article class="reference-item"
+          data-title="{{ITEM_TITLE_2}}"
+          data-product="{{SOURCE_PRODUCT_2}}"
+          data-evidence="{{EVIDENCE_LOCATION_2}}"
+          data-practice="{{SPECIFIC_PRACTICE_2}}"
+          data-transfer="{{TRANSFERABLE_DESIGN_2}}"
+          data-adapt="{{ADAPTATION_2}}"
+          data-avoid="{{AVOID_2}}">
+          <div class="human-cell">
+            <h2>{{ITEM_TITLE_2}}</h2>
+            <span class="tag">{{SOURCE_PRODUCT_2}}</span>
+            <span class="tag">{{RESEARCH_POINT_2}}</span>
+            <p><strong>可参考点：</strong>{{REFERENCE_VALUE_2}}</p>
+            <p><strong>适配提醒：</strong>{{ADAPTATION_NOTE_2}}</p>
+            <p class="point-note"><strong>参考摘要：</strong>{{REFERENCE_SUMMARY_2}}</p>
+          </div>
+          <div class="choice-cell">
+            <h3>确认参考</h3>
+            <p><strong>适配提醒：</strong>{{ADAPTATION_NOTE_2}}</p>
+            <div class="choice-row">
+              <label><input type="checkbox" class="write-choice" name="choice-2" value="采纳此参考">采纳此参考</label>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="output">
+        <h2>已确认参考</h2>
+        <p>勾选后汇总可复制的竞品参考摘要，供后续步骤使用。</p>
+        <textarea id="handoff"></textarea>
+        <button type="button" id="copy">复制确认内容</button>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    function isWritten(item) {
+      const input = item.querySelector('.write-choice');
+      return Boolean(input && input.checked);
+    }
+
+    function renderHandoff() {
+      const items = Array.from(document.querySelectorAll('.reference-item'));
+      const lines = ['# Confirmed Benchmark References', ''];
+
+      items.forEach((item) => {
+        if (!isWritten(item)) return;
+        lines.push(`## ${item.dataset.title}`);
+        lines.push(`- 来源产品：${item.dataset.product}`);
+        lines.push(`- 可参考点：${item.dataset.transfer}`);
+        lines.push(`- 适配提醒：${item.dataset.adapt || item.dataset.avoid}`);
+        lines.push('');
+      });
+
+      if (lines.length === 2) {
+        lines.push('暂无已写入的参考点。');
+      }
+      document.getElementById('handoff').value = lines.join('\n');
+    }
+
+    document.querySelectorAll('.write-choice').forEach((input) => {
+      input.addEventListener('change', renderHandoff);
+    });
+    document.getElementById('copy').addEventListener('click', async () => {
+      const text = document.getElementById('handoff').value;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (err) {
+        document.getElementById('handoff').select();
+        document.execCommand('copy');
+      }
+    });
+    renderHandoff();
+  </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>[Project Name]</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #172033;
+      --muted: #4f5f74;
+      --line: #d8e0ec;
+      --soft: #f7f9fc;
+      --blue: #2457d6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .hero { background: var(--text); color: #fff; padding: 36px 0 38px; margin-bottom: 28px; }
+    .hero-inner { max-width: 1120px; margin: 0 auto; padding: 0 36px; }
+    main { max-width: 1120px; margin: 0 auto; padding: 0 36px 72px; }
+    .topline { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; color: #9fb9ff; font-size: 15px; font-weight: 900; letter-spacing: .03em; }
+    .topline span + span::before { content: "｜"; margin-right: 16px; color: rgba(255,255,255,.25); }
+    h1 { margin: 10px 0 12px; font-size: 36px; line-height: 1.18; letter-spacing: 0; }
+    .hero h1 { color: #fff; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .title-level { display: inline-flex; align-items: center; min-height: 34px; padding: 4px 13px; border-radius: 999px; background: #2f6fed; color: #fff; font-size: 20px; font-weight: 900; line-height: 1; }
+    .summary { max-width: 960px; margin: 0; color: rgba(255,255,255,.78); font-size: 17px; line-height: 1.7; }
+    .summary strong { color: #fff; }
+    .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 18px; color: rgba(255,255,255,.7); font-size: 13px; font-weight: 700; }
+    .meta span + span::before { content: "｜"; margin-right: 12px; color: rgba(255,255,255,.25); }
+    section { border-bottom: 1px solid var(--line); padding: 24px 0 22px; }
+    .section-group { border-bottom: 1px solid var(--line); padding: 24px 0 22px; }
+    .section-group section { border-bottom: 0; padding: 0; }
+    .section-group section + section { margin-top: 24px; }
+    h2 { margin: 0 0 14px; font-size: 22px; line-height: 1.28; }
+    h3 { margin: 20px 0 10px; font-size: 17px; line-height: 1.35; }
+    p, li, td { color: var(--muted); font-size: 16px; line-height: 1.68; }
+    ul, ol { margin: 0; padding-left: 22px; }
+    li { margin: 7px 0; }
+    strong { color: var(--text); font-weight: 800; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 10px; }
+    th, td { border: 1px solid var(--line); padding: 12px 13px; text-align: left; vertical-align: top; }
+    th { color: var(--text); background: var(--soft); font-size: 14px; line-height: 1.5; }
+    .note { border-left: 3px solid var(--blue); background: var(--soft); padding: 12px 14px; margin: 12px 0 0; color: var(--muted); }
+    .materials { display: flex; flex-wrap: wrap; gap: 12px; padding-left: 0; list-style: none; }
+    .materials a, .materials span { display: inline-flex; align-items: center; min-height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); color: var(--text); font-weight: 700; font-size: 14px; }
+    .materials a { border-color: #9eb6f6; background: #f4f7ff; color: var(--blue); text-decoration: none; }
+    .materials span { border-style: dashed; color: #7a8699; background: #fafbfe; }
+    .flow-map { display: grid; gap: 0; margin-top: 12px; }
+    .flow-row { display: grid; grid-template-columns: 34px 1fr; gap: 14px; position: relative; padding-bottom: 18px; }
+    .flow-row:not(:last-child)::before { content: ""; position: absolute; left: 16px; top: 34px; bottom: 0; border-left: 2px solid var(--line); }
+    .flow-num { position: relative; z-index: 1; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--text); color: #fff; font-size: 14px; font-weight: 800; }
+    .flow-box { border: 1px solid var(--line); border-radius: 8px; background: var(--soft); padding: 14px 16px; }
+    .flow-box h3 { margin: 0 0 6px; }
+    .flow-box p { margin: 0; }
+    .path-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .path-card { border: 1px solid var(--line); border-radius: 8px; background: var(--soft); padding: 14px 16px; }
+    .path-card p { margin: 8px 0 0; }
+    .lane-flow { border: 1px solid var(--line); border-radius: 8px; background: #fafbfe; padding: 20px; margin-top: 14px; }
+    .lane-track { padding-bottom: 22px; }
+    .lane-track + .lane-track { border-top: 1px solid var(--line); padding-top: 22px; }
+    .lane-title { margin: 0 0 16px; font-size: 18px; font-weight: 900; color: var(--text); }
+    .lane-title span { margin-left: 10px; color: var(--muted); font-size: 14px; font-weight: 800; }
+    .lane-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+    .lane-card { position: relative; border: 1px solid #c8d7fb; border-radius: 8px; background: #fff; padding: 26px 20px 18px; min-height: 180px; }
+    .lane-card:not(:last-child)::after { content: ""; position: absolute; right: -21px; top: 42px; width: 20px; border-top: 2px solid var(--line); }
+    .lane-num { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 14px; background: var(--blue); color: #fff; font-size: 18px; font-weight: 900; box-shadow: 0 0 0 8px #f4f7ff; }
+    .lane-track:nth-child(n+2) .lane-num { background: var(--text); }
+    .lane-card h3 { margin: 0 0 10px; font-size: 17px; line-height: 1.35; }
+    .lane-card p { margin: 0; font-size: 15px; line-height: 1.55; }
+    .lane-chip { display: inline-flex; align-items: center; min-height: 26px; margin: 12px 8px 0 0; padding: 0 10px; border: 1px solid #c8d7fb; border-radius: 999px; background: #f4f7ff; color: var(--blue); font-size: 13px; font-weight: 900; }
+    .parallel-flow { display: grid; gap: 28px; margin-top: 14px; container-type: inline-size; }
+    .parallel-track { padding: 18px 0; }
+    .parallel-track + .parallel-track { border-top: 1px solid var(--line); }
+    .parallel-title { margin: 0 0 14px; font-size: 18px; font-weight: 900; color: var(--text); }
+    .parallel-steps { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 22px; align-items: stretch; }
+    .parallel-steps.is-snake, .parallel-steps.is-reverse { grid-template-columns: repeat(5, minmax(140px, 1fr)); }
+    .parallel-break { height: 24px; display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 22px; color: var(--blue); font-size: 28px; font-weight: 900; }
+    .parallel-break::before { content: "↓"; grid-column: 5; justify-self: center; }
+    .parallel-steps.is-reverse .parallel-step:nth-child(1) { grid-column: 5; }
+    .parallel-steps.is-reverse .parallel-step:nth-child(2) { grid-column: 4; }
+    .parallel-steps.is-reverse .parallel-step:nth-child(3) { grid-column: 3; }
+    .parallel-steps.is-reverse .parallel-step:not(:last-child)::after { content: "←"; left: -18px; right: auto; }
+    .parallel-step { position: relative; border-radius: 8px; background: var(--soft); padding: 12px; min-height: 96px; }
+    .parallel-step.is-user { background: #f4f7ff; border: 1px solid #c8d7fb; }
+    .parallel-step:not(:last-child)::after { content: "→"; position: absolute; right: -18px; top: 50%; transform: translateY(-50%); color: var(--blue); font-size: 28px; font-weight: 900; }
+    .parallel-step p { margin: 8px 0 0; font-size: 14px; line-height: 1.5; }
+    .actor { display: inline-flex; margin-right: 8px; padding: 3px 7px; border-radius: 4px; background: #eaf1ff; color: var(--blue); font-size: 12px; font-weight: 900; }
+    .actor.ai, .actor.system { background: #eceff3; color: #4d5664; }
+    .phase-flow { display: grid; gap: 18px; margin-top: 14px; }
+    .phase { border: 1px solid var(--line); border-radius: 8px; background: var(--soft); padding: 14px 16px; }
+    .phase h3 { margin: 0 0 12px; }
+    .phase-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .phase-step { position: relative; display: flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 10px 12px; min-height: 74px; }
+    .phase-step:not(:last-child)::after { content: "→"; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: var(--blue); font-weight: 900; }
+    .phase-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; margin-right: 6px; border-radius: 50%; background: #f4f7ff; color: var(--blue); font-size: 12px; font-weight: 900; }
+    .branch-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .branch { border-left: 3px solid var(--blue); background: var(--soft); padding: 10px 12px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+    .branch strong { display: block; margin-bottom: 3px; color: var(--text); }
+    .handoff { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; margin-top: 14px; }
+    .stage { flex: 1 1 180px; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); padding: 12px; }
+    .arrow { align-self: center; color: var(--blue); font-weight: 900; }
+    .state-flow { display: grid; gap: 0; margin-top: 14px; }
+    .state-step { display: grid; grid-template-columns: 170px 1fr; gap: 16px; align-items: center; position: relative; padding-bottom: 18px; }
+    .state-step:not(:last-child)::before { content: ""; position: absolute; left: 84px; top: 38px; bottom: 0; border-left: 2px solid var(--line); }
+    .state-pill { position: relative; z-index: 1; align-self: start; border: 1px solid #9eb6f6; border-radius: 999px; background: #f4f7ff; color: var(--blue); padding: 9px 12px; text-align: center; font-weight: 900; }
+    .state-action { display: flex; align-items: center; min-height: 50px; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); padding: 12px 14px; }
+    .canvas-scroll { overflow-x: auto; margin-top: 14px; }
+    .canvas-flow { position: relative; width: 1240px; height: 475px; }
+    .canvas-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .canvas-lines path { stroke: #5c7ce0; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .canvas-node { position: absolute; display: flex; align-items: center; justify-content: center; min-width: 120px; min-height: 52px; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); padding: 12px 22px; color: var(--text); font-size: 16px; font-weight: 800; text-align: center; white-space: nowrap; }
+    .canvas-node.page, .canvas-node.tab { border-color: #c8d7fb; background: #f4f7ff; color: var(--blue); }
+    .canvas-node.large { width: 210px; height: 150px; }
+    .canvas-node.wide { width: 220px; }
+    .canvas-node.mid { width: 190px; }
+    .canvas-node.small { width: 120px; }
+    .wireframe-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 12px; }
+    .wireframe-page { border: 1px dashed #9a8f78; background: #fffdf8; padding: 12px; min-height: 240px; }
+    .wf-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid #d2c7ad; padding-bottom: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 900; color: var(--text); }
+    .wf-tag { border: 1px solid #d2c7ad; background: #fff9ec; padding: 3px 7px; color: var(--muted); font-size: 11px; font-weight: 800; }
+    .wf-alert, .wf-toolbar, .wf-table, .wf-panel, .wf-footer { border: 1px solid #d2c7ad; background: #fff9ec; padding: 8px; margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .wf-toolbar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; background: #fff; }
+    .wf-control { border: 1px solid #d2c7ad; background: #fffdf8; padding: 6px; font-weight: 700; }
+    .wf-table { display: grid; gap: 6px; background: #fff; }
+    .wf-row { display: grid; grid-template-columns: 18px 1.2fr .9fr .9fr .9fr; gap: 6px; align-items: center; border: 1px solid #d2c7ad; background: #fffdf8; padding: 6px; }
+    .wf-row.is-selected { border-color: #9eb6f6; background: #f4f7ff; }
+    .wf-layout { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 8px; }
+    .wf-panel strong, .wf-alert strong, .wf-footer strong { color: var(--text); }
+    .wf-group { border: 1px solid #d2c7ad; background: #fffdf8; padding: 8px; margin-top: 8px; }
+    .wf-group-title { color: var(--text); font-weight: 900; font-size: 13px; margin-bottom: 6px; }
+    @media (max-width: 860px) {
+      .hero-inner { padding: 0 18px; }
+      main { padding: 0 18px 56px; }
+      h1 { font-size: 30px; }
+      .path-grid, .branch-grid, .lane-steps, .parallel-steps, .parallel-steps.is-snake, .parallel-steps.is-reverse, .phase-steps, .wireframe-grid, .wf-layout, .wf-toolbar, .wf-row { grid-template-columns: 1fr; }
+      .lane-card:not(:last-child)::after, .parallel-step:not(:last-child)::after, .parallel-break, .phase-step:not(:last-child)::after, .arrow { display: none; }
+      .state-step { grid-template-columns: 1fr; gap: 8px; }
+      .state-step:not(:last-child)::before { left: 14px; top: 42px; }
+      .state-pill { justify-self: start; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="topline">
+        <span>[大平台名或待确认]</span>
+        <span>[子产品全名或待确认]</span>
+      </div>
+      <h1><span class="title-level">[Level，无则删除此 span]</span>[需求名]</h1>
+      <p class="summary">[一句话说明需求主线，包含对象、用户动作和承接链路]</p>
+      <div class="meta">
+        <span>需求类型：[新增功能 / 体验优化 / ...]</span>
+        <span>适合设计评审 / 说明</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Materials</h2>
+      <ul class="materials">
+        <li><a href="[需求整理结果链接]">需求整理结果</a></li>
+        <li><span>PRD 文档</span></li>
+        <li><span>Figma 设计稿</span></li>
+        <li><span>Feature Benchmarking Report</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Project Background</h2>
+      <p>[项目背景段落]</p>
+      [只有场景会引入不同角色、任务结构、页面 / 状态或设计取舍时才追加 Scenarios；如果只是重复 User Flow 入口、Design Goal 对象或 Design Focus 问题则省略]
+    </section>
+
+    <section>
+      <h2>Design Goal</h2>
+      <ul>[按独立设计对象输出 design goals，不设固定条数；同一页面承载的能力合并成一条，独立容器、确认流程或状态反馈才单独成条]</ul>
+    </section>
+
+    <section>
+      <h2>User Flow</h2>
+      [按需求生成 User Flow：先判断主设计对象；多个入口进入同一核心页面并完成同一任务时，优先表达页面结构，入口只做轻量说明；只有任务目标或结果实质不同才拆并列流程]
+    </section>
+
+    [可选：仅当用户明确要求 Wireframe / 线框图 / 低保真页面布局时，在这里追加 Wireframe section；默认必须省略]
+
+    <div class="section-group">
+      <h2>Design Direction</h2>
+      [可选：只有存在其他章节未表达的真实设计取舍时才输出 Design Focus；不设固定条数，同一理解问题合并，没有就省略]
+      [可选：只有材料明确包含“问题 / 约束、对设计的影响、设计机会”三者关系，或竞品报告明确沉淀机会点时，才追加 Opportunity Mapping section；否则必须省略，不写占位]
+    </div>
+  </main>
+</body>
+</html>

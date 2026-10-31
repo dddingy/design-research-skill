@@ -1,0 +1,26 @@
+{
+  "name": "design-research-skill",
+  "version": "0.2.0",
+  "description": "Design pre-phase workflow: requirement organization, feature benchmarking, design definition, and AI design input.",
+  "author": {
+    "name": "dddingy"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Design Research Skill",
+    "shortDescription": "Turn raw design inputs into a review-ready design definition.",
+    "longDescription": "A set of skills for designers: organize raw requirement materials, run feature benchmarking with traceable sources, and produce a review-ready design definition plus AI design input.",
+    "developerName": "dddingy",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Research"
+    ],
+    "defaultPrompt": [
+      "把这些原始材料处理到 Design Definition。",
+      "只整理这份设计需求，不做竞品分析。",
+      "对这个功能做竞品调研并生成 Source Pack。"
+    ]
+  }
+}
