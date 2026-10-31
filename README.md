@@ -42,3 +42,7 @@ python3 -m unittest discover -s tests -v
 ```
 
 变更记录见 [CHANGELOG.md](CHANGELOG.md)。
+
+## License
+
+[MIT](LICENSE)
